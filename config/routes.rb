@@ -25,6 +25,8 @@ Samson::Application.routes.draw do
       get :deploys, to: 'deploys#index'
       post :clone, to: 'stages#clone'
     end
+
+    resources :locks, only: [:index, :create, :destroy]
   end
 
   resources :projects, except: [:destroy] do
@@ -153,6 +155,6 @@ Samson::Application.routes.draw do
 
   mount SseRailsEngine::Engine, at: '/streaming'
 
-  use_doorkeeper
+  use_doorkeeper # adds oauth/* routes
   resources :oauth_test, only: [:index, :show] if %w[development test].include?(Rails.env)
 end

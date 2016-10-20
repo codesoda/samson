@@ -1,8 +1,11 @@
 # frozen_string_literal: true
 class Api::BaseController < ApplicationController
+  cattr_reader :requested_oauth_scope
+
   skip_before_action :verify_authenticity_token, if: :using_per_request_auth?
 
   prepend_before_action :enforce_json_format
+  prepend_before_action :store_requested_oauth_scope
   before_action :require_project
 
   protected
@@ -40,5 +43,15 @@ class Api::BaseController < ApplicationController
   def enforce_json_format
     return if request.format == :json
     render status: 415, json: {error: 'JSON only api. Use json extension or set content type application/json'}
+  end
+
+  def store_requested_oauth_scope
+    request.env['requested_oauth_scope'] = requested_oauth_scope
+  end
+
+  # making sure all scopes are documented
+  private_class_method def self.requested_oauth_scope=(scope)
+    raise "Add #{scope} to config/locales/en.yml" unless I18n.t('doorkeeper.applications.help.scopes') =~ /\b#{scope}\b/
+    @@requested_oauth_scope = scope
   end
 end

@@ -21,3 +21,9 @@
 
 en:
   hello: "Hello world"
+  doorkeeper:
+    applications:
+      help:
+        # TODO: make dynamic https://github.com/doorkeeper-gem/doorkeeper/issues/896
+        # for now keep in sync with all calls to requested_oauth_scope
+        scopes: "Separate scopes with spaces. Possible: locks, default (everything)"
