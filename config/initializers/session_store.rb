@@ -12,4 +12,7 @@ options = {key: "_samson_session_#{Rails.env}"}
 used_domains = [config.samson.deploy_origin, config.samson.stream_origin, config.samson.uri.to_s]
 options[:domain] = :all if used_domains.uniq.size != 1
 
+# require re-login after certain time
+options[:expire_after] = 1.month
+
 Samson::Application.config.session_store :cookie_store, options
